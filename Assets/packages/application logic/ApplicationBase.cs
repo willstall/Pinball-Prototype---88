@@ -76,28 +76,3 @@ namespace ApplicationLogic
 
 	}
 }
-
-/*
-		INITIALIZE,
-		LEVEL_START,
-		LEVEL_PLAY,
-		LEVEL_EDIT,
-		LEVEL_UP,
-		LEVEL_COMPLETE,
-		LEVEL_REPRIEVE,
-		PAUSE
-
-    INITIALIZE,
-    MENU,
-    START,
-    LEVELUP,
-    PENDINGBURGER,
-    EATING,
-    NEWINGREDIENT,
-    PLAY,
-    COMPLAINING,
-    OVER,
-    RESTART,
-    WIN,
-    NULL
-    */
