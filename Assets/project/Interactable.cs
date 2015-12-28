@@ -14,12 +14,15 @@ public class Interactable : MonoBehaviour
 
 	public string activateMessage = "Activate";
 
+	public float timeout = 1.0f;
+
 	Material mat;
 	Color color;
 	
 	Collider collider;
 
 	bool isSelected;
+	float timer;
 
 	void Start ()
 	{
@@ -28,30 +31,47 @@ public class Interactable : MonoBehaviour
 		collider = GetComponent<Collider>();
 
 		isSelected = false;
+		timer = timeout;
 
-		Idle();
+		SetAlpha( idleAlpha );
 	}
 
 	void Update ()
 	{
-		if(!isSelected)
-			return;
-
-		if(Input.GetKeyDown( KeyCode.Space ))
+		if(isSelected)
 		{
-			SendMessage(activateMessage, SendMessageOptions.DontRequireReceiver);
-			Active();
+			SetAlpha( selectAlpha );
+		}else{
+			SetAlpha( idleAlpha );
 		}
+		
+		if(Input.GetKey( KeyCode.Space ))
+		{	
+			if(timer >= timeout)
+			{	
+				SetAlpha( activeAlpha );	
+				timer = 0;				
+				if(isSelected)
+					Activate();
+			}		
+		}
+
+		timer += Time.deltaTime;
+	}
+
+	void Activate()
+	{
+		//SendMessage(activateMessage, SendMessageOptions.DontRequireReceiver);
+		Debug.Log("Activate");
+		SetAlpha( activeAlpha );
 	}
 
 	void OnTriggerEnter( Collider other )
 	{
-		Debug.Log("hey");
 		if( !ShouldAffect(other) )
 			return;
 		
-		isSelected = false;
-		Select();
+		isSelected = true;
 	}
 
 	void OnTriggerExit( Collider other )
@@ -59,29 +79,14 @@ public class Interactable : MonoBehaviour
 		if( !ShouldAffect(other) )
 			return;	
 
-		isSelected = true;
-		Idle();
+		isSelected = false;
 	}
 
-	void Idle()
+	void SetAlpha( float alpha )
 	{
-		color.a = idleAlpha;
-		mat.color = color;
-	}
-
-	void Active()
-	{
-		color.a = activeAlpha;
-		mat.color = color;
-	}
-
-	void Select()
-	{
-		Debug.Log("do it");
-		color.a = selectAlpha;
+		color.a = alpha;
 		mat.color = color;	
 	}
-
 	public bool ShouldAffect( Collider other )
 	{
 		return IsInLayerMask(other.gameObject, layersToAffect);
