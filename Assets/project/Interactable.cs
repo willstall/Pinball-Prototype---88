@@ -12,7 +12,7 @@ public class Interactable : MonoBehaviour
 	[Range(0.0f,1.0f)]
 	public float selectAlpha = 0.45f;
 
-	public string activateMessage = "Activate";
+	public string activateMessage = "Activated";
 
 	public float timeout = 1.0f;
 
@@ -23,6 +23,8 @@ public class Interactable : MonoBehaviour
 
 	bool isSelected;
 	float timer;
+
+	GameObject target;
 
 	void Start ()
 	{
@@ -44,8 +46,8 @@ public class Interactable : MonoBehaviour
 		}else{
 			SetAlpha( idleAlpha );
 		}
-		
-		if(Input.GetKey( KeyCode.Space ))
+
+		if(Input.GetKeyDown( KeyCode.Space ))
 		{	
 			if(timer >= timeout)
 			{	
@@ -61,16 +63,16 @@ public class Interactable : MonoBehaviour
 
 	void Activate()
 	{
-		//SendMessage(activateMessage, SendMessageOptions.DontRequireReceiver);
-		Debug.Log("Activate");
-		SetAlpha( activeAlpha );
+		SendMessage(activateMessage, target, SendMessageOptions.DontRequireReceiver);		
+		//Debug.Log("Activate");
 	}
 
 	void OnTriggerEnter( Collider other )
 	{
 		if( !ShouldAffect(other) )
 			return;
-		
+
+		target = other.gameObject;
 		isSelected = true;
 	}
 
@@ -79,6 +81,7 @@ public class Interactable : MonoBehaviour
 		if( !ShouldAffect(other) )
 			return;	
 
+		target = other.gameObject;
 		isSelected = false;
 	}
 
